@@ -1,0 +1,104 @@
+---
+title: "Complex_EpC_20200508"
+author: "Emma"
+date: "08/05/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  tidy = TRUE,
+  tidy.opts = list(width.cutoff = 120),
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+  
+```{r}
+# Load required packages
+
+library(Seurat)
+library(dplyr)
+#library(Matrix)
+library(readr)
+#library(reshape2)
+library(ggplot2)
+library(cowplot)
+library(gplots)
+library(RColorBrewer)
+library(sctransform)
+#library(patchwork)
+
+```
+
+```{r}
+CellType_EpC_Complex <- readRDS(file = "CellType_EpC_Complex.rds")
+```
+
+```{r}
+plots <- DimPlot(CellType_EpC_Complex, group.by = c("patient", "Treatment","Condition"), combine = FALSE)
+plots <- lapply(X = plots, FUN = function(x) x + theme(legend.position = "top", legend.text = element_text(size = 5)) + guides(color = guide_legend(nrow = 3, 
+    byrow = TRUE, override.aes = list(size = 3))))
+CombinePlots(plots, ncol = 3)
+
+```
+
+```{r}
+
+CellType_EpC_Complex <- SetIdent(CellType_EpC_Complex, value = "Condition")
+```
+
+
+```{r Find Markers}
+# find markers for every cluster compared to all remaining cells, report
+# only the positive ones
+CellType_EpC_Complex.markers <- FindAllMarkers(object = CellType_EpC_Complex, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25)
+CellType_EpC_Complex.markers %>% group_by(cluster) %>% top_n(5, avg_logFC)
+
+write.table(CellType_EpC_Complex.markers, file = "CellType_EpC_Complex_allmarkers_20200508.txt")
+```
+
+```{r Top10 Markers}
+CellType_EpC_Complex.top10 <- CellType_EpC_Complex.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+# setting slim.col.label to TRUE will print just the cluster IDS instead of
+# every cell name
+
+pdf("CellType-EpC_Complex_top10heatmap.pdf", useDingbats = FALSE)
+
+DoHeatmap(object = CellType_EpC_Complex, features = CellType_EpC_Complex.top10$gene, size = 3, angle = 0) + theme(text = element_text(size = 4), legend.key.height = unit(0.2,"cm"))
+
+dev.off()
+
+write.table(CellType_EpC_Complex.top10, file = "CellType_EpC_Complex_top10.txt")
+
+```
+```{r}
+FeaturePlot(CellType_EpC_Complex, features = "DIO2")
+```
+
+```{r}
+EpC.cluster.averages <- AverageExpression(CellType_EpC_Complex)
+head(EpC.cluster.averages)
+write.table(EpC.cluster.averages$integrated, file = "CellType_EpC_Complex_clusteraverages.txt")
+
+```
+
+```{r}
+
+EpC_avgexp <- read.table(file = "CellType_EpC_Complex_clusteraverages.txt", sep = "")
+
+GOI <- as.matrix(EpC_avgexp[c("PAEP","SPP1","IGFBP3","LIF","LAMB3","TIMP3","DPP4","FOXA2","WNT5A","MUC1","HSD17B2","CXCL14","STC1"),])
+
+palette_PuOr <- brewer.pal(11,"PuOr")
+
+pdf(file = "CellType_EpC_Complex_GOI.pdf")
+EpC_GOI <- heatmap.2(GOI, scale = "row", col = palette_PuOr, density.info = "none", trace = "none", cexCol = 1, srtCol = 35, margins = c(6,6))
+dev.off()
+```
+
+```{r}
+saveRDS(CellType_EpC_Complex, file = "CellType_EpC_Complex.rds")
+```
+

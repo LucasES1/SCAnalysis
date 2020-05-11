@@ -1,0 +1,74 @@
+---
+title: "ComplexOrganoids_CellPhoneDBinput"
+author: "Emma"
+date: "10/05/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  tidy = TRUE,
+  tidy.opts = list(width.cutoff = 120),
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+  
+```{r}
+# Load required packages
+
+library(Seurat)
+library(dplyr)
+#library(Matrix)
+library(readr)
+#library(reshape2)
+library(ggplot2)
+library(cowplot)
+library(gplots)
+library(RColorBrewer)
+library(sctransform)
+#library(patchwork)
+
+```
+
+```{r}
+
+CellPhone_ComplexD4 <- readRDS(file = "Condition_D4_Complex.rds")
+
+DefaultAssay(CellPhone_ComplexD4) <- "RNA"
+
+```
+
+```{r}
+pdf("CellPhone_ComplexD4_UMAP.pdf", useDingbats = FALSE)
+plots <- DimPlot(CellPhone_ComplexD4, group.by = c("patient", "Treatment","Condition"), combine = FALSE)
+plots <- lapply(X = plots, FUN = function(x) x + theme(legend.position = "top", legend.text = element_text(size = 5)) + guides(color = guide_legend(nrow = 3, 
+    byrow = TRUE, override.aes = list(size = 3))))
+CombinePlots(plots, ncol = 3)
+dev.off()
+```
+
+
+```{r}
+Idents(CellPhone_ComplexD4)
+
+#If NOT cell type, change Ident
+Idents(CellPhone_ComplexD4) <- "CellType"
+
+Idents(CellPhone_ComplexD4)
+```
+
+
+```{r}
+#Export data for CellPhoneDB
+
+#Take raw data and normalise it
+count_raw <- GetAssayData(object = CellPhone_ComplexD4, slot = "counts")
+count_norm <- apply(count_raw, 2, function(x) (x/sum(x))*10000)
+write.table(count_norm, file = "cellphonedb_count_ComplexD4.txt", sep="\t", quote=F)
+
+#generate metadata file
+meta_data <- cbind(rownames(CellPhone_ComplexD4@meta.data), CellPhone_ComplexD4@meta.data[,"CellType", drop=F])   #####  cluster is the user’s specific cluster column
+write.table(meta_data, file = "cellphonedb_meta_ComplexD4.txt", sep="\t", quote=F, row.names=F)
+```

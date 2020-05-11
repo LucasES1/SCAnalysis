@@ -1,0 +1,431 @@
+---
+title: "Complex_anchor_emma_200507"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  tidy = TRUE,
+  tidy.opts = list(width.cutoff = 120),
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+  
+```{r}
+# Load required packages
+
+library(Seurat)
+library(dplyr)
+#library(Matrix)
+library(readr)
+#library(reshape2)
+library(ggplot2)
+library(cowplot)
+library(gplots)
+library(RColorBrewer)
+library(sctransform)
+#library(patchwork)
+
+```
+
+
+
+```{r seuratobjects_to_singleobject}
+
+#
+
+Complex009D0.data <- read.table("N702_B_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex009D0.data <- read.table("~/Documents/scRNA/Tom_hg38/N702_B/N702_B_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D0.data <- Complex009D0.data[,1:800]
+
+Complex009D0_B2 <- CreateSeuratObject(counts = Complex009D0.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex009D0",ncol(Complex009D0.data)), row.names = colnames(Complex009D0.data)))
+
+
+#
+
+Complex009D4.data <- read.table("N704_D_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex009D4.data <- read.table("~/Documents/scRNA/Tom_hg38/N704_D/N704_D_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D4.data <- Complex009D4.data[,1:800]
+
+Complex009D4_D2 <- CreateSeuratObject(counts = Complex009D4.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex009D4",ncol(Complex009D4.data)), row.names = colnames(Complex009D4.data)))
+
+
+#
+
+Complex009D4Dasa.data <- read.table("N705_E_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex009D4Dasa.data <- read.table("~/Documents/scRNA/Tom_hg38/N705_E/N705_E_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D4Dasa.data <- Complex009D4Dasa.data[,1:800]
+
+Complex009D4Dasa_E2 <- CreateSeuratObject(counts = Complex009D4Dasa.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex009D4Dasa",ncol(Complex009D4Dasa.data)), row.names = colnames(Complex009D4Dasa.data)))
+
+
+##
+
+Complex016D0.data <- read.table("N707_G_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex016D0.data <- read.table("~/Documents/scRNA/Tom_hg38/N707_G/N707_G_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D0.data <- Complex016D0.data[,1:800]
+
+Complex016D0_G2 <- CreateSeuratObject(counts = Complex016D0.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex016D0",ncol(Complex016D0.data)), row.names = colnames(Complex016D0.data)))
+
+
+#
+
+Complex016D4.data <- read.table("N709_I_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex016D4.data <- read.table("~/Documents/scRNA/Tom_hg38/N709_I/N709_I_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D4.data <- Complex016D4.data[,1:800]
+
+Complex016D4_I2 <- CreateSeuratObject(counts = Complex016D4.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex016D4",ncol(Complex016D4.data)), row.names = colnames(Complex016D4.data)))
+
+
+#
+
+Complex016D4Dasa.data <- read.table("N710_J_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex016D4Dasa.data <- read.table("~/Documents/scRNA/Tom_hg38/N710_J/N710_J_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D4Dasa.data <- Complex016D4Dasa.data[,1:800]
+
+Complex016D4Dasa_J2 <- CreateSeuratObject(counts = Complex016D4Dasa.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex016D4Dasa",ncol(Complex016D4Dasa.data)), row.names = colnames(Complex016D4Dasa.data)))
+
+
+##
+
+Complex018D0.data <- read.table("N707_L_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex018D0.data <- read.table("~/Documents/scRNA/Tom_hg38/N707_L/N707_L_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D0.data <- Complex018D0.data[,1:800]
+
+Complex018D0_L2 <- CreateSeuratObject(counts = Complex018D0.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex018D0",ncol(Complex018D0.data)), row.names = colnames(Complex018D0.data)))
+
+
+#
+
+Complex018D4.data <- read.table("N709_N_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex018D4.data <- read.table("~/Documents/scRNA/Tom_hg38/N709_N/N709_N_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D4.data <- Complex018D4.data[,1:800]
+
+Complex018D4_N2 <- CreateSeuratObject(counts = Complex018D4.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex018D4",ncol(Complex018D4.data)), row.names = colnames(Complex018D4.data)))
+
+
+#
+
+Complex018D4Dasa.data <- read.table("N710_O_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+#Complex018D4Dasa.data <- read.table("~/Documents/scRNA/Tom_hg38/N710_O/N710_O_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D4Dasa.data <- Complex018D4Dasa.data[,1:800]
+
+Complex018D4Dasa_O2 <- CreateSeuratObject(counts = Complex018D4Dasa.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex018D4Dasa",ncol(Complex018D4Dasa.data)), row.names = colnames(Complex018D4Dasa.data)))
+
+rm(Complex009D0.data,Complex009D4.data,Complex009D4Dasa.data,Complex016D0.data,Complex016D4.data,Complex016D4Dasa.data,Complex018D0.data,Complex018D4.data,Complex018D4Dasa.data)
+
+```
+
+```{r}
+
+ComplexOrganoids <- merge(x = Complex009D0_B2, y = c(Complex009D4_D2,Complex009D4Dasa_E2,Complex016D0_G2,Complex016D4_I2,Complex016D4Dasa_J2,Complex018D0_L2,Complex018D4_N2,Complex018D4Dasa_O2), project = "Organoid_DropSeq")
+
+rm(Complex009D0_B2,Complex009D4_D2,Complex009D4Dasa_E2,Complex016D0_G2,Complex016D4_I2,Complex016D4Dasa_J2,Complex018D0_L2,Complex018D4_N2,Complex018D4Dasa_O2)
+```
+
+```{r}
+
+ComplexOrganoids <- SetIdent(object = ComplexOrganoids, value = "Treatment")
+```
+
+```{r}
+ComplexOrganoids$patient <- plyr::mapvalues(
+    x = ComplexOrganoids$Treatment, 
+    from = c("Complex009D0", "Complex009D4", "Complex009D4Dasa", "Complex016D0", "Complex016D4", "Complex016D4Dasa","Complex018D0", "Complex018D4", "Complex018D4Dasa"), 
+    to = c(rep("20-009",3), rep("20-016",3), rep("20-018",3))
+)
+
+head(ComplexOrganoids[[]])
+```
+
+```{r}
+
+ComplexOrganoids[["percent.mt"]] <- PercentageFeatureSet(object=ComplexOrganoids, pattern ="^MT-")
+```
+
+####Visualize QC metrics
+
+Quality control metrics are viewed in a violin plot to assess the data.  QC metrics are used to filter the data, removing extreme counts (representing cell doublets or ambient RNA) and cells with a high proportion of mitochondrial transcripts (representing dead/dying cells).
+
+```{r Vln nFeature_RNA}
+
+pdf("ComplexOrganoids_Vln_nFeature_RNA_20200507.pdf", useDingbats = FALSE)
+
+VlnPlot(object=ComplexOrganoids, features="nFeature_RNA", pt.size = 0.05) + theme(legend.position = 'none')
+
+dev.off()
+```
+
+```{r Vln nCount_RNA} 
+
+pdf("ComplexOrganoids_Vln_nCount_RNA_20200507.pdf", useDingbats = FALSE)
+
+VlnPlot(object=ComplexOrganoids, features="nCount_RNA", pt.size = 0.05) + theme(legend.position = 'none')
+
+dev.off()
+```
+
+```{r Vln percent.mt}
+
+pdf("ComplexOrganoids_Vln_percentmt_20200507.pdf", useDingbats = FALSE)
+
+VlnPlot(object=ComplexOrganoids, features="percent.mt", pt.size = 0.05) + theme(legend.position = 'none')
+
+dev.off()
+```
+FeatureScatter was used to examine the relationships between features (nCount_RNA vs. percent.mito and nCount_RNA vs. nFeature_RNA).
+
+```{r feature_scatter}
+# FeatureScatter is typically used to visualize feature-feature relationships, but can be used
+# for anything calculated by the object, i.e. columns in object metadata, PC scores etc.
+
+plot1 <- FeatureScatter(object = ComplexOrganoids, feature1 = "nCount_RNA", feature2 = "percent.mt")
+plot2 <- FeatureScatter(object = ComplexOrganoids, feature1 = "nCount_RNA", feature2 = "nFeature_RNA")
+
+pdf("ComplexOrganoids_FeatureScatter_20200507.pdf", useDingbats = FALSE)
+
+CombinePlots(plots = list(plot1, plot2), legend = 'bottom')
+
+dev.off()
+```
+
+```{r}
+
+ComplexOrganoids <- subset(x = ComplexOrganoids, subset = nFeature_RNA > 50 & nFeature_RNA < 5000 & percent.mt < 5)
+
+```
+
+
+```{r}
+
+ComplexOrganoids.list <- SplitObject(ComplexOrganoids, split.by = "patient")
+ComplexOrganoids.list <- ComplexOrganoids.list[c("20-009","20-016","20-018")]
+
+```
+
+```{r}
+
+for (i in 1:length(ComplexOrganoids.list)) {
+    ComplexOrganoids.list[[i]] <- NormalizeData(ComplexOrganoids.list[[i]], verbose = FALSE)
+    ComplexOrganoids.list[[i]] <- FindVariableFeatures(ComplexOrganoids.list[[i]], selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+}
+
+```
+
+```{r}
+
+ComplexOrganoids.anchors <- FindIntegrationAnchors(object.list = ComplexOrganoids.list, dims = 1:30)
+
+```
+
+```{r}
+
+ComplexOrganoids.integrated <- IntegrateData(anchorset = ComplexOrganoids.anchors, dims = 1:30)
+
+```
+
+```{r}
+
+rm(ComplexOrganoids,ComplexOrganoids.anchors,ComplexOrganoids.list,plot1,plot2)
+
+```
+
+```{r cell cycle scoring}
+
+# Also read in a list of cell cycle markers, from Tirosh et al, 2015
+
+cc.genes <- readLines(con = "./regev_lab_cell_cycle_genes.txt")
+
+#cc.genes <- readLines(con = "~/Documents/OldMac/MacBook2017/DropSeq/cell_cycle_vignette_files/regev_lab_cell_cycle_genes.txt")
+
+# We can segregate this list into markers of G2/M phase and markers of S
+# phase
+s.genes <- cc.genes[1:43]
+g2m.genes <- cc.genes[44:98]
+
+ComplexOrganoids.integrated <- CellCycleScoring(object = ComplexOrganoids.integrated, s.features = s.genes, g2m.features = g2m.genes, set.ident = TRUE)
+
+# view cell cycle scores and phase assignments
+head(x = ComplexOrganoids.integrated[[]])
+```
+
+```{r}
+
+
+# switch to integrated assay. The variable features of this assay are automatically
+# set during IntegrateData
+DefaultAssay(ComplexOrganoids.integrated) <- "integrated"
+
+# Run the standard workflow for visualization and clustering
+ComplexOrganoids.integrated <- ScaleData(ComplexOrganoids.integrated, verbose = FALSE)
+
+ComplexOrganoids.integrated <- RunPCA(ComplexOrganoids.integrated, npcs = 30, verbose = FALSE)
+
+DimHeatmap(ComplexOrganoids.integrated, dims = 1:15, cells = 500, balanced = TRUE)
+
+ElbowPlot(object = ComplexOrganoids.integrated)
+```
+
+```{r}
+ComplexOrganoids.integrated <- FindNeighbors(object = ComplexOrganoids.integrated, dims = 1:15)
+
+ComplexOrganoids.integrated <- FindClusters(object = ComplexOrganoids.integrated, resolution = 0.4)
+```
+
+```{r}
+head(x=Idents(object=ComplexOrganoids.integrated),5)
+```
+
+```{r}
+ComplexOrganoids.integrated <- RunUMAP(ComplexOrganoids.integrated, reduction = "pca", dims = 1:15)
+p1 <- DimPlot(ComplexOrganoids.integrated, reduction = "umap", group.by = "Treatment")
+
+pdf("ComplexOrganoids_integrated_UMAP_Treatment_20200507.pdf", useDingbats = FALSE)
+
+plot(p1)
+
+dev.off()
+
+p2 <- DimPlot(ComplexOrganoids.integrated, reduction = "umap", group.by = "patient")
+
+pdf("ComplexOrganoids_integrated_UMAP_patient_20200507.pdf", useDingbats = FALSE)
+
+plot(p2)
+
+dev.off()
+
+p3 <- DimPlot(ComplexOrganoids.integrated, reduction = "umap", group.by = "Phase")
+
+pdf("ComplexOrganoids_integrated_UMAP_Phase_20200507.pdf", useDingbats = FALSE)
+
+plot(p3)
+
+dev.off()
+
+
+p4 <- DimPlot(ComplexOrganoids.integrated, reduction = "umap", label = TRUE)
+
+pdf("ComplexOrganoids_integrated_UMAP_cluster_20200507.pdf", useDingbats = FALSE)
+
+plot(p4)
+
+dev.off()
+
+rm(p1,p2,p3,p4)
+
+```
+
+```{r}
+
+p1 <- FeaturePlot(ComplexOrganoids.integrated,features="nFeature_RNA")
+p2 <- FeaturePlot(ComplexOrganoids.integrated,features="nCount_RNA")
+p3 <- FeaturePlot(ComplexOrganoids.integrated,features="percent.mt")
+
+pdf("ComplexOrganoids_integrated_QCfeatures_20200507.pdf", useDingbats = FALSE)
+
+CombinePlots(plots = list(p1,p2,p3), ncol = 1)
+
+dev.off()
+
+rm(p1,p2,p3)
+
+```
+
+```{r Find Markers}
+# find markers for every cluster compared to all remaining cells, report
+# only the positive ones
+ComplexOrganoids.integrated.markers <- FindAllMarkers(object = ComplexOrganoids.integrated, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25)
+ComplexOrganoids.integrated.markers %>% group_by(cluster) %>% top_n(5, avg_logFC)
+
+write.table(ComplexOrganoids.integrated.markers, file = "ComplexOrganoids_integrated_allmarkers_20200507.txt")
+```
+
+```{r Top10 Markers}
+ComplexOrganoids.integrated.top10 <- ComplexOrganoids.integrated.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+# setting slim.col.label to TRUE will print just the cluster IDS instead of
+# every cell name
+
+pdf("ComplexOrganoids_integrated_top10heatmap.pdf", useDingbats = FALSE)
+
+DoHeatmap(object = ComplexOrganoids.integrated, features = ComplexOrganoids.integrated.top10$gene, size = 3, angle = 0) + theme(text = element_text(size = 4), legend.key.height = unit(0.2,"cm"))
+
+dev.off()
+
+write.table(ComplexOrganoids.integrated.top10, file = "ComplexOrganoids.integrated_top10.txt")
+
+```
+
+
+```{r}
+saveRDS(ComplexOrganoids.integrated, "ComplexOrganoids_integrated_20200507.rds")
+```
+
+```{r}
+ComplexOrganoids.integrated.CellType <- ComplexOrganoids.integrated@meta.data$seurat_clusters
+
+ComplexOrganoids.integrated@meta.data$CellType <- plyr::mapvalues(ComplexOrganoids.integrated.CellType, from=c(1,4:6,8,0,2:3,7,9,10),to=c(rep("EpC",5),rep("Stroma",5),"Ciliated"))
+
+```
+
+```{r}
+ComplexOrganoids.integrated.Condition <- ComplexOrganoids.integrated@meta.data$old.ident
+
+ComplexOrganoids.integrated@meta.data$Condition <- plyr::mapvalues(ComplexOrganoids.integrated.Condition, from=c("Complex009D0", "Complex016D0","Complex018D0","Complex009D4", "Complex016D4","Complex018D4","Complex009D4Dasa", "Complex016D4Dasa","Complex018D4Dasa"),to=c(rep("ComplexD0",3),rep("ComplexD4",3), rep("ComplexD4Dasa",3)))
+
+```
+
+```{r}
+#Subset the data by CellType
+
+#Set idents to CellType for subsetting
+ComplexOrganoids.integrated <- SetIdent(ComplexOrganoids.integrated,value="CellType")
+
+ComplexOrganoids.integrated_EpC <- subset(ComplexOrganoids.integrated, idents = "EpC")
+
+saveRDS(ComplexOrganoids.integrated_EpC, file = "CellType_EpC_Complex.rds")
+
+ComplexOrganoids.integrated_Stroma <- subset(ComplexOrganoids.integrated, idents = "Stroma")
+
+saveRDS(ComplexOrganoids.integrated_Stroma, file = "CellType_Stroma_Complex.rds")
+```
+
+
+```{r}
+#Subset the data by Condition for CellPhoneDB
+
+#Set idents to CellType for subsetting
+ComplexOrganoids.integrated <- SetIdent(ComplexOrganoids.integrated,value="Condition")
+
+ComplexOrganoids.integrated_D0 <- subset(ComplexOrganoids.integrated, idents = "ComplexD0")
+
+saveRDS(ComplexOrganoids.integrated_D0, file = "Condition_D0_Complex.rds")
+
+ComplexOrganoids.integrated_D4 <- subset(ComplexOrganoids.integrated, idents = "ComplexD4")
+
+saveRDS(ComplexOrganoids.integrated_D4, file = "Condition_D4_Complex.rds")
+
+ComplexOrganoids.integrated_D4Dasa <- subset(ComplexOrganoids.integrated, idents = "ComplexD4Dasa")
+
+saveRDS(ComplexOrganoids.integrated_D4Dasa, file = "Condition_D4Dasa_Complex.rds")
+```

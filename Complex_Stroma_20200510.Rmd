@@ -1,0 +1,106 @@
+---
+title: "Complex_Stroma_20200510"
+author: "Emma"
+date: "10/05/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  tidy = TRUE,
+  tidy.opts = list(width.cutoff = 120),
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+  
+```{r}
+# Load required packages
+
+library(Seurat)
+library(dplyr)
+#library(Matrix)
+library(readr)
+#library(reshape2)
+library(ggplot2)
+library(cowplot)
+library(gplots)
+library(RColorBrewer)
+library(sctransform)
+#library(patchwork)
+
+```
+
+```{r}
+CellType_Stroma_Complex <- readRDS(file = "CellType_Stroma_Complex.rds")
+```
+
+```{r}
+pdf("CellType_Stroma_Complex_UMAPs.pdf", useDingbats = FALSE)
+plots <- DimPlot(CellType_Stroma_Complex, group.by = c("patient", "Treatment","Condition"), combine = FALSE)
+plots <- lapply(X = plots, FUN = function(x) x + theme(legend.position = "top", legend.text = element_text(size = 5)) + guides(color = guide_legend(nrow = 3, 
+    byrow = TRUE, override.aes = list(size = 3))))
+CombinePlots(plots, ncol = 3)
+dev.off()
+
+```
+
+```{r}
+
+CellType_Stroma_Complex <- SetIdent(CellType_Stroma_Complex, value = "Condition")
+```
+
+
+```{r Find Markers}
+# find markers for every cluster compared to all remaining cells, report
+# only the positive ones
+CellType_Stroma_Complex.markers <- FindAllMarkers(object = CellType_Stroma_Complex, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25)
+CellType_Stroma_Complex.markers %>% group_by(cluster) %>% top_n(5, avg_logFC)
+
+write.table(CellType_Stroma_Complex.markers, file = "CellType_Stroma_Complex_allmarkers_20200508.txt")
+```
+
+```{r Top10 Markers}
+CellType_Stroma_Complex.top10 <- CellType_Stroma_Complex.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+# setting slim.col.label to TRUE will print just the cluster IDS instead of
+# every cell name
+
+pdf("CellType-Stroma_Complex_top10heatmap.pdf", useDingbats = FALSE)
+
+DoHeatmap(object = CellType_Stroma_Complex, features = CellType_Stroma_Complex.top10$gene, size = 3, angle = 0) + theme(text = element_text(size = 4), legend.key.height = unit(0.2,"cm"))
+
+dev.off()
+
+write.table(CellType_Stroma_Complex.top10, file = "CellType_Stroma_Complex_top10.txt")
+
+```
+```{r}
+FeaturePlot(CellType_Stroma_Complex, features = c("SCARA5", "DIO2"))
+```
+
+```{r}
+Stroma.cluster.averages <- AverageExpression(CellType_Stroma_Complex)
+head(Stroma.cluster.averages)
+write.table(Stroma.cluster.averages$integrated, file = "CellType_Stroma_Complex_clusteraverages.txt")
+
+```
+
+```{r}
+
+Stroma_avgexp <- read.table(file = "CellType_Stroma_Complex_clusteraverages.txt", sep = "")
+
+GOI <- as.matrix(Stroma_avgexp[c("SCARA5","DIO2","PRL","IGFBP1","DUSP1","PLCL1","SGK1","HSD11B1","IL1RL1"),])
+
+palette_PuOr <- brewer.pal(11,"PuOr")
+
+pdf(file = "CellType_Stroma_Complex_GOI.pdf")
+Stroma_GOI <- heatmap.2(GOI, scale = "row", col = palette_PuOr, density.info = "none", trace = "none", cexCol = 1, srtCol = 35, margins = c(6,6))
+dev.off()
+```
+
+```{r}
+saveRDS(CellType_Stroma_Complex, file = "CellType_Stroma_Complex.rds")
+```
+

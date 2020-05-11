@@ -1,0 +1,282 @@
+---
+title: "Complex_anchor_200505"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  tidy = TRUE,
+  tidy.opts = list(width.cutoff = 120),
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+  
+```{r}
+# Load required packages
+
+library(Seurat)
+library(dplyr)
+#library(Matrix)
+library(readr)
+#library(reshape2)
+library(ggplot2)
+library(cowplot)
+library(gplots)
+library(RColorBrewer)
+library(sctransform)
+#library(patchwork)
+
+```
+
+
+
+```{r seuratobjects_to_singleobject}
+
+#
+
+#Complex009D0.data <- read.table("./hg38_matrices/N702_B_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D0.data <- read.table("~/Documents/scRNA/Tom_hg38/N702_B/N702_B_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D0.data <- Complex009D0.data[,1:800]
+
+Complex009D0_B2 <- CreateSeuratObject(counts = Complex009D0.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex009D0",ncol(Complex009D0.data)), row.names = colnames(Complex009D0.data)))
+
+
+#
+
+#Complex009D4.data <- read.table("./hg38_matrices/N704_D_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D4.data <- read.table("~/Documents/scRNA/Tom_hg38/N704_D/N704_D_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D4.data <- Complex009D4.data[,1:800]
+
+Complex009D4_D2 <- CreateSeuratObject(counts = Complex009D4.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex009D4",ncol(Complex009D4.data)), row.names = colnames(Complex009D4.data)))
+
+
+#
+
+#Complex009D4Dasa.data <- read.table("./hg38_matrices/N705_E_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D4Dasa.data <- read.table("~/Documents/scRNA/Tom_hg38/N705_E/N705_E_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex009D4Dasa.data <- Complex009D4Dasa.data[,1:800]
+
+Complex009D4Dasa_E2 <- CreateSeuratObject(counts = Complex009D4Dasa.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex009D4Dasa",ncol(Complex009D4Dasa.data)), row.names = colnames(Complex009D4Dasa.data)))
+
+
+##
+
+#Complex016D0.data <- read.table("./hg38_matrices/N707_G_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D0.data <- read.table("~/Documents/scRNA/Tom_hg38/N707_G/N707_G_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D0.data <- Complex016D0.data[,1:800]
+
+Complex016D0_G2 <- CreateSeuratObject(counts = Complex016D0.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex016D0",ncol(Complex016D0.data)), row.names = colnames(Complex016D0.data)))
+
+
+#
+
+#Complex016D4.data <- read.table("./hg38_matrices/N709_I_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D4.data <- read.table("~/Documents/scRNA/Tom_hg38/N709_I/N709_I_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D4.data <- Complex016D4.data[,1:800]
+
+Complex016D4_I2 <- CreateSeuratObject(counts = Complex016D4.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex016D4",ncol(Complex016D4.data)), row.names = colnames(Complex016D4.data)))
+
+
+#
+
+#Complex016D4Dasa.data <- read.table("./hg38_matrices/N710_J_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D4Dasa.data <- read.table("~/Documents/scRNA/Tom_hg38/N710_J/N710_J_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex016D4Dasa.data <- Complex016D4Dasa.data[,1:800]
+
+Complex016D4Dasa_J2 <- CreateSeuratObject(counts = Complex016D4Dasa.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex016D4Dasa",ncol(Complex016D4Dasa.data)), row.names = colnames(Complex016D4Dasa.data)))
+
+
+##
+
+#Complex018D0.data <- read.table("./hg38_matrices/N707_L_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D0.data <- read.table("~/Documents/scRNA/Tom_hg38/N707_L/N707_L_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D0.data <- Complex018D0.data[,1:800]
+
+Complex018D0_L2 <- CreateSeuratObject(counts = Complex018D0.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex018D0",ncol(Complex018D0.data)), row.names = colnames(Complex018D0.data)))
+
+
+#
+
+#Complex018D4.data <- read.table("./hg38_matrices/N709_N_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D4.data <- read.table("~/Documents/scRNA/Tom_hg38/N709_N/N709_N_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D4.data <- Complex018D4.data[,1:800]
+
+Complex018D4_N2 <- CreateSeuratObject(counts = Complex018D4.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex018D4",ncol(Complex018D4.data)), row.names = colnames(Complex018D4.data)))
+
+
+#
+
+#Complex018D4Dasa.data <- read.table("./hg38_matrices/N710_O_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D4Dasa.data <- read.table("~/Documents/scRNA/Tom_hg38/N710_O/N710_O_STAMPS_2000.dge.txt.gz", "\t", header=T, row.names=1)
+
+Complex018D4Dasa.data <- Complex018D4Dasa.data[,1:800]
+
+Complex018D4Dasa_O2 <- CreateSeuratObject(counts = Complex018D4Dasa.data, min.cells = 3, min.features = 200, project = "Organoid_DropSeq", meta.data = data.frame(Treatment = rep("Complex018D4Dasa",ncol(Complex018D4Dasa.data)), row.names = colnames(Complex018D4Dasa.data)))
+
+rm(Complex009D0.data,Complex009D4.data,Complex009D4Dasa.data,Complex016D0.data,Complex016D4.data,Complex016D4Dasa.data,Complex018D0.data,Complex018D4.data,Complex018D4Dasa.data)
+
+```
+
+```{r}
+
+ComplexOrganoids <- merge(x = Complex009D0_B2, y = c(Complex009D4_D2,Complex009D4Dasa_E2,Complex016D0_G2,Complex016D4_I2,Complex016D4Dasa_J2,Complex018D0_L2,Complex018D4_N2,Complex018D4Dasa_O2), project = "Organoid_DropSeq")
+
+rm(Complex009D0_B2,Complex009D4_D2,Complex009D4Dasa_E2,Complex016D0_G2,Complex016D4_I2,Complex016D4Dasa_J2,Complex018D0_L2,Complex018D4_N2,Complex018D4Dasa_O2)
+```
+
+```{r}
+
+ComplexOrganoids <- SetIdent(object = ComplexOrganoids, value = "Treatment")
+```
+
+```{r}
+ComplexOrganoids$patient <- plyr::mapvalues(
+    x = ComplexOrganoids$Treatment, 
+    from = c("Complex009D0", "Complex009D4", "Complex009D4Dasa", "Complex016D0", "Complex016D4", "Complex016D4Dasa","Complex018D0", "Complex018D4", "Complex018D4Dasa"), 
+    to = c(rep("20-009",3), rep("20-016",3), rep("20-018",3))
+)
+
+head(ComplexOrganoids[[]])
+```
+
+```{r}
+
+ComplexOrganoids[["percent.mt"]] <- PercentageFeatureSet(object=ComplexOrganoids, pattern ="^MT-")
+```
+
+####Visualize QC metrics
+
+Quality control metrics are viewed in a violin plot to assess the data.  QC metrics are used to filter the data, removing extreme counts (representing cell doublets or ambient RNA) and cells with a high proportion of mitochondrial transcripts (representing dead/dying cells).
+
+```{r Vln nFeature_RNA}
+VlnPlot(object=ComplexOrganoids, features="nFeature_RNA", pt.size = 0.05) + theme(legend.position = 'none')
+```
+
+```{r Vln nCount_RNA} 
+VlnPlot(object=ComplexOrganoids, features="nCount_RNA", pt.size = 0.05) + theme(legend.position = 'none')
+```
+
+```{r Vln percent.mt}
+VlnPlot(object=ComplexOrganoids, features="percent.mt", pt.size = 0.05) + theme(legend.position = 'none')
+```
+FeatureScatter was used to examine the relationships between features (nCount_RNA vs. percent.mito and nCount_RNA vs. nFeature_RNA).
+
+```{r feature_scatter}
+# FeatureScatter is typically used to visualize feature-feature relationships, but can be used
+# for anything calculated by the object, i.e. columns in object metadata, PC scores etc.
+
+plot1 <- FeatureScatter(object = ComplexOrganoids, feature1 = "nCount_RNA", feature2 = "percent.mt")
+plot2 <- FeatureScatter(object = ComplexOrganoids, feature1 = "nCount_RNA", feature2 = "nFeature_RNA")
+CombinePlots(plots = list(plot1, plot2), legend = 'bottom')
+```
+
+```{r}
+
+ComplexOrganoids <- subset(x = ComplexOrganoids, subset = nFeature_RNA > 50 & nFeature_RNA < 5000 & percent.mt < 5)
+
+```
+
+
+```{r}
+
+ComplexOrganoids.list <- SplitObject(ComplexOrganoids, split.by = "patient")
+ComplexOrganoids.list <- ComplexOrganoids.list[c("20-009","20-016","20-018")]
+
+```
+
+```{r}
+
+for (i in 1:length(ComplexOrganoids.list)) {
+    ComplexOrganoids.list[[i]] <- NormalizeData(ComplexOrganoids.list[[i]], verbose = FALSE)
+    ComplexOrganoids.list[[i]] <- FindVariableFeatures(ComplexOrganoids.list[[i]], selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+}
+
+```
+
+```{r}
+
+ComplexOrganoids.anchors <- FindIntegrationAnchors(object.list = ComplexOrganoids.list, dims = 1:30)
+
+```
+
+```{r}
+
+ComplexOrganoids.integrated <- IntegrateData(anchorset = ComplexOrganoids.anchors, dims = 1:30)
+
+```
+
+```{r}
+
+rm(ComplexOrganoids,ComplexOrganoids.anchors,ComplexOrganoids.list)
+
+```
+
+```{r cell cycle scoring}
+
+# Also read in a list of cell cycle markers, from Tirosh et al, 2015
+
+#cc.genes <- readLines(con = "./regev_lab_cell_cycle_genes.txt")
+cc.genes <- readLines(con = "~/Documents/OldMac/MacBook2017/DropSeq/cell_cycle_vignette_files/regev_lab_cell_cycle_genes.txt")
+
+# We can segregate this list into markers of G2/M phase and markers of S
+# phase
+s.genes <- cc.genes[1:43]
+g2m.genes <- cc.genes[44:98]
+
+ComplexOrganoids.integrated <- CellCycleScoring(object = ComplexOrganoids.integrated, s.features = s.genes, g2m.features = g2m.genes, set.ident = TRUE)
+
+# view cell cycle scores and phase assignments
+head(x = ComplexOrganoids.integrated[[]])
+```
+
+```{r}
+
+
+# switch to integrated assay. The variable features of this assay are automatically
+# set during IntegrateData
+DefaultAssay(ComplexOrganoids.integrated) <- "integrated"
+
+# Run the standard workflow for visualization and clustering
+ComplexOrganoids.integrated <- ScaleData(ComplexOrganoids.integrated, verbose = FALSE)
+
+ComplexOrganoids.integrated <- RunPCA(ComplexOrganoids.integrated, npcs = 30, verbose = FALSE)
+ComplexOrganoids.integrated <- RunUMAP(ComplexOrganoids.integrated, reduction = "pca", dims = 1:30)
+p1 <- DimPlot(ComplexOrganoids.integrated, reduction = "umap", group.by = "Treatment")
+p2 <- DimPlot(ComplexOrganoids.integrated, reduction = "umap", group.by = "patient")
+p3 <- DimPlot(ComplexOrganoids.integrated, reduction = "umap", group.by = "Phase")
+p1 + p2 +p3
+
+
+```
+
+```{r}
+
+FeaturePlot(ComplexOrganoids.integrated,features="nFeature_RNA")
+FeaturePlot(ComplexOrganoids.integrated,features="nCount_RNA")
+FeaturePlot(ComplexOrganoids.integrated,features="percent.mt")
+
+```
+
+
+
+
